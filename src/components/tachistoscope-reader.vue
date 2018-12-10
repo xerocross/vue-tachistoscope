@@ -70,7 +70,6 @@
     </div>
 </template>
 <script>
-import {SimpleQajax} from "cross-vue-base";
 import {TextLoader} from "cross-vue-base";
 import Debounce from "lodash.debounce";
 
@@ -139,24 +138,7 @@ export default {
             this.isReading = false;
             clearInterval(this.tickingLink);
         },
-        // getText () {
-        //     this.textLoaded = false;
-        //     let self = this;
-        //     SimpleQajax.execute({
-        //         URL : this.textURL,
-        //         method : "GET"
-        //     }).then(function(response){
-        //         self.textLoaded = true;
-        //         self.rawText = response.responseText;
-        //         self.splitWords();
-        //         self.currentLoadedText = self.getTextByKey(self.textURL).name;
-        //     }).fail(function() {
-        //         alert("Sorry: There was a problem loading the text.");
-        //     });
-
-        // },
         receiveText (rawText) {
-            alert("got it");
             this.rawText = rawText;
             this.textLoaded = true;
             this.splitWords();
@@ -211,7 +193,7 @@ export default {
         margin-bottom: 15px;
         .reading-line {
             font-family:'Times New Roman', Times, serif;
-            font-size: 15pt;
+            font-size: 19pt;
         }
 
     }
@@ -219,9 +201,6 @@ export default {
         padding-top:0px;
         padding-bottom:0px;
         text-align: center;
-    }
-    .reading-line {
-        padding : 20px;
     }
     .btn {
         margin: 5px;
