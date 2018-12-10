@@ -3,35 +3,39 @@
         
         <div class="row">
 
-
+            <div 
+                class="col-sm-8 " 
+            >
+                <div>
+                    <div class = "reading-box">
+                    
+                        <a 
+                            class="btn btn-primary btn-lg" 
+                            @click="start" >start</a>
+                        <a 
+                            class="btn btn-primary btn-lg" 
+                            @click = "stop">stop</a>
+                        <a 
+                            class="btn btn-primary btn-lg" 
+                            @click = "backToBeginning">reset</a>
+                        <div class="reading-line">
+                            {{ currentWordGroup }}
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
             <div class="col-sm-4">
 
                 <form @submit.prevent = "">
-                    <div class="form-group">
-                        <div class="alert alert-info">
-                            {{ textLoaded ? ("loaded: " + currentLoadedText) : "no text loaded" }}
-                        </div>
-                        <select 
-                            v-model = "textURL" 
-                            class = "form-control">
-                            <option 
-                                v-for = "opt in readingOptions" 
-                                :key = "opt.url" 
-                                :value="opt.url"
-                            >
-                                {{ opt.name }}
-                            </option>
-                        </select>
-                        <button
-                            class="btn btn-primary btn-lg" 
-                            @click="load" >
-                            load
-                        </button>
-                        
-                    </div>
-                
-                
 
+                    <text-loader
+                        :text-options = "readingOptions"
+                        @event_text_loaded = "receiveText"
+                        @event_loading = "setLoading"
+                    >
+
+                    </text-loader>
                     <div class="form-group">
                         <label>Time Per Flash: {{ timePerFlash }} ms</label>
                         
@@ -62,35 +66,19 @@
 
                 </form>
             </div>
-
-            <div 
-                class="col-sm-8 reading-box" 
-                style="text-align:center">
-                <div>
-                    
-                    <a 
-                        class="btn btn-primary btn-lg" 
-                        @click="start" >start</a>
-                    <a 
-                        class="btn btn-primary btn-lg" 
-                        @click = "stop">stop</a>
-                    <a 
-                        class="btn btn-primary btn-lg" 
-                        @click = "backToBeginning">reset</a>
-                </div>
-                <div class="reading-line">
-                    {{ currentWordGroup }}
-                </div>
-            </div>
         </div>
     </div>
 </template>
 <script>
 import {SimpleQajax} from "cross-vue-base";
+import {TextLoader} from "cross-vue-base";
 import Debounce from "lodash.debounce";
 
 let resetText = "Text Appears Here";
 export default {
+    components : {
+        TextLoader
+    },
     props : {
         readingOptions : {
             type : "array",
@@ -151,31 +139,33 @@ export default {
             this.isReading = false;
             clearInterval(this.tickingLink);
         },
-        tick () {
+        // getText () {
+        //     this.textLoaded = false;
+        //     let self = this;
+        //     SimpleQajax.execute({
+        //         URL : this.textURL,
+        //         method : "GET"
+        //     }).then(function(response){
+        //         self.textLoaded = true;
+        //         self.rawText = response.responseText;
+        //         self.splitWords();
+        //         self.currentLoadedText = self.getTextByKey(self.textURL).name;
+        //     }).fail(function() {
+        //         alert("Sorry: There was a problem loading the text.");
+        //     });
 
+        // },
+        receiveText (rawText) {
+            alert("got it");
+            this.rawText = rawText;
+            this.textLoaded = true;
+            this.splitWords();
         },
-        getText () {
+        setLoading () {
             this.textLoaded = false;
-            window.tachistoscope = this;
-            console.log("get text");
-            let self = this;
-            SimpleQajax.execute({
-                URL : this.textURL,
-                method : "GET"
-            }).then(function(response){
-                self.textLoaded = true;
-                self.rawText = response.responseText;
-                self.splitWords();
-                self.currentLoadedText = self.getTextByKey(self.textURL).name;
-            }).fail(function(e) {
-                debugger;
-                alert("Sorry: There was a problem loading the text.");
-            });
-
         },
         splitWords () {
             let words;
-
             let text = this.rawText.replace(/--\s*/g,"-- ");
             words = text.split(/\s+/g);
             this.words = [];
@@ -205,8 +195,7 @@ export default {
             }
             return group;
         },
-        
-    },
+    }
 }
 </script>
 <style lang="scss">
@@ -218,8 +207,8 @@ export default {
         border-color: #be8f3c;
         border-width: 1px;
         box-shadow: 5px 5px 5px darkgray;
-        
-
+        text-align:center;
+        margin-bottom: 15px;
         .reading-line {
             font-family:'Times New Roman', Times, serif;
             font-size: 15pt;

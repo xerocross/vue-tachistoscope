@@ -14,7 +14,7 @@
   "author": "Adam Cross",
   "license": "0BSD",
   "dependencies": {
-    "cross-vue-base": "^0.1.1",
+    "cross-vue-base": "^0.2.2",
     "lodash.debounce": "^4.0.8",
     "vue": "^2.5.17"
   },
