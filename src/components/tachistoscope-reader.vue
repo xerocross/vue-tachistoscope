@@ -80,7 +80,7 @@ export default {
     },
     props : {
         readingOptions : {
-            type : "array",
+            type : Array,
             default : []
         }
     },
